@@ -13,17 +13,20 @@ public class CardReaderMain {
 		// make and open attendance file with time/date in file name
 		Scanner scanner = new Scanner(System.in);
 		String timeStamp  = new SimpleDateFormat("yyyy'-'MM'-'dd'_'hh'.'mm").format(new Date());
-		String fileName = "attendanceLog_" + timeStamp + ".log";
+		String attendanceFileName = "attendanceLog_" + timeStamp + ".log";
+		String inputLogFileName = "inputLog_" + timeStamp + ".log";
 		String nameStr = "";
-		HashMap<String, String> inputHash = new HashMap<String, String>();
+		HashMap<String, Student> inputHash = new HashMap<String, Student>();
 
 		try {
-			File attendanceLog = new File(fileName);
+			File attendanceLog = new File(attendanceFileName);
+			File inputLog = new File(inputLogFileName);
 			attendanceLog.createNewFile();
+			inputLog.createNewFile();
 			FileWriter attendance = new FileWriter(attendanceLog);
+			FileWriter inputLogging = new FileWriter(inputLog);
 
-
-			System.out.println("File " + fileName + " has been created");
+			System.out.println("File " + attendanceFileName + " has been created");
 
 			attendance.write("Attendance log for " + timeStamp + "\r\n");
 			attendance.write("------------------------------------\r\n");
@@ -32,17 +35,26 @@ public class CardReaderMain {
 			while(runScan){
 				System.out.println("Please slide student ID card");
 				String inputStr = scanner.next();
+				// keep track of every card swipe
+				inputLogging.write(inputStr + "\r\n");
+				inputLogging.flush();
 
 				if(inputStr.equals("exit")){break;}
 
-				nameStr = inputStr;  //TODO add name parser
+				Student tempStud = new Student(inputStr);
+				
+				if(!tempStud.parseInputForName()){
+					System.out.println("Error reading card or wrong format");
+				}
+				
 				System.out.println("------------------------------------\r\n");
-				if(inputHash.putIfAbsent(inputStr, nameStr) != null){
-					System.out.println(nameStr + "\r\n\r\nhas already been logged\r\n");
+				//putIfAbsent adds a key pair to the hashmap, return null if not there, returns value if value changed.
+				if(inputHash.putIfAbsent(inputStr, tempStud) != null){
+					System.out.println(tempStud.getName() + "\r\n\r\nhas already been logged\r\n");
 				} else {
 					attendance.write(inputStr + "\r\n");
 					attendance.flush();
-					System.out.println(nameStr + "\r\n\r\nhas been logged as present\r\n");
+					System.out.println(tempStud.getName() + "\r\n\r\nhas been marked as present\r\n");
 				}
 				System.out.println("------------------------------------\r\n");
 			}
