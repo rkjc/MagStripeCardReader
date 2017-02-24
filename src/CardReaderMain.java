@@ -42,21 +42,36 @@ public class CardReaderMain {
 				if(inputStr.equals("exit")){break;}
 
 				Student tempStud = new Student(inputStr);
-				
+
 				if(!tempStud.parseInputForName()){
 					System.out.println("Error reading card or wrong format");
-				}
-				
-				System.out.println("------------------------------------\r\n");
-				//putIfAbsent adds a key pair to the hashmap, return null if not there, returns value if value changed.
-				if(inputHash.putIfAbsent(inputStr, tempStud) != null){
-					System.out.println(tempStud.getName() + "\r\n\r\nhas already been logged\r\n");
+					System.out.println("####################################################################");
+					System.out.println("####################################################################");
+					System.out.println("####################################################################");
+					System.out.println("####################################################################");
+					System.out.println("####################################################################");
+					System.out.println("####################################################################");
+					System.out.println(" ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR");
+					System.out.println(" ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR");
+					System.out.println(" ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR");
+					System.out.println("####################################################################");
+					System.out.println("####################################################################");
+					System.out.println("####################################################################");
+					System.out.println("####################################################################");
+					System.out.println("####################################################################");
+					System.out.println("####################################################################");
 				} else {
-					attendance.write(inputStr + "\r\n");
-					attendance.flush();
-					System.out.println(tempStud.getName() + "\r\n\r\nhas been marked as present\r\n");
+					System.out.println("------------------------------------\r\n");
+					//putIfAbsent adds a key pair to the hashmap, return null if not there, returns value if value changed.
+					if(inputHash.putIfAbsent(inputStr, tempStud) != null){
+						System.out.println(tempStud.getName() + "\r\n\r\nhas already been logged\r\n");
+					} else {
+						attendance.write(inputStr + "\r\n");
+						attendance.flush();
+						System.out.println(tempStud.getName() + "\r\n\r\nhas been marked as present\r\n");
+					}
 				}
-				System.out.println("------------------------------------\r\n");
+				System.out.println("------------------------------------");
 			}
 
 		//wait 2 sec
